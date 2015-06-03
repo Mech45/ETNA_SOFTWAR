@@ -1,7 +1,10 @@
 #ifndef SOFTWAR_MAIN_H
 #define SOFTWAR_MAIN_H
 
-
+#define PORT 4243
+#define BACKLOG 5
+#define EXIT_FAILURE 0
+#define EXIT_SUCCESS 1
 ///////////////////////////////////////////////////////
 // PROTOTYPES
 ///////////////////////////////////////////////////////
