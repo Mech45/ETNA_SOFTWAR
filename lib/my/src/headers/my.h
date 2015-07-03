@@ -5,7 +5,7 @@
 ** Login   <lecler_s@etna-alternance.net>
 **
 ** Started on  Wed Apr 23 11:39:49 2014 Steven Leclerc
-** Last update Thu May  1 10:06:34 2014 Steven Leclerc
+** Last update Wed Mar 18 09:52:25 2015 COSSON Clement
 */
 
 #ifndef MY_HEADER_H
@@ -45,6 +45,7 @@
   void unsignedU(int input);
   void binA(int input);
   void readBin(int tabEmpty[]);
+  int  my_str_isnum(char *str);
 
   typedef struct arg_l
   {
