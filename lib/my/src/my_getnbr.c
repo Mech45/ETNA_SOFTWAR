@@ -1,14 +1,14 @@
 /*
 ** my_getnbr.c for my_getnbr in /Users/clementcosson/Piscine/C/Journee_02/cosson_c/my_getnbr
-** 
+**
 ** Made by COSSON Clement
 ** Login   <cosson_c@etna-alternance.net>
-** 
+**
 ** Started on  Wed Oct 23 11:05:39 2013 COSSON Clement
-** Last update Sat Jan 10 12:43:15 2015 COSSON Clement
+** Last update Sun Mar 22 04:50:05 2015 COSSON Clement
 */
 
-#include "../headers/my.h"
+#include "./headers/my.h"
 
 int	my_getnbr(char *str)
 {
