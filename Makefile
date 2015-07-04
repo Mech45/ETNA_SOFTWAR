@@ -9,7 +9,7 @@ PROJECT=soft-war-server
 LIBMY=libmy.so
 
 # Commands
-CC=gcc
+CC=gcc -lpthread
 CFLAGS=-W -Wall -Werror -Wextra -std=c11 -g
 DEBUGGER=gdb
 RM=rm -rf

@@ -1,5 +1,6 @@
 #include "../lib/my/src/headers/my.h"
 #include "./headers/init_server.h"
+#include "./headers/handler_acceptance_chaining.h"
 #include "./headers/main.h"
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -17,11 +18,7 @@ int          init_server()
 {
   int                 listener;
   struct sockaddr_in  srv_addr;
-  struct sockaddr_in  cli_addr;
-  socklen_t           socklen;
   struct protoent     *proto;
-  s_client*           client_one;
-  s_client*           client_two;
   int                 on;
 
   on = 1;
@@ -49,20 +46,9 @@ int          init_server()
     exit(EXIT_FAILURE);
   }
   my_printf("Connexion ok\n");
-  socklen = sizeof(cli_addr);
-  client_chain_handler_init("client_one");
-  client_one = list_chain->first;
-  client_two = add_client("client_two");
-  //TODO Handle each entrance connexion on loop + THREAD
-  client_one->fd = accept(listener, (struct sockaddr *)&cli_addr, &socklen);
-  client_two->fd = accept(listener, (struct sockaddr *)&cli_addr, &socklen);
-  if (client_one->fd == -1 || client_two->fd == -1)
-  {
-    exit(EXIT_FAILURE);
-  }
+  //Function Handle acceptance + create chain per client
+  handler_acceptance_chaining(listener);
   my_printf("Connexion ok\n");
-  write(client_one->fd, my_strconcat("Hej!", client_one->name), my_strlen(my_strconcat("Hej!", client_one->name)));
-  write(client_two->fd, my_strconcat("Hej!", client_two->name), my_strlen(my_strconcat("Hej!", client_two->name)));
   return (listener);
 }
 
@@ -80,7 +66,7 @@ void          client_chain_handler_init(char* client_name)
   list_chain->first = client;
 }
 
-s_client* add_client(char* client_name)
+s_client*     add_client(char* client_name)
 {
   s_client*     client;
   s_client*     client_buffer;
