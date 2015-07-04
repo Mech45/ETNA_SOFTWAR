@@ -13,7 +13,7 @@
 #include <errno.h>
 
 
-void          init_server()
+int          init_server()
 {
   int                 listener;
   struct sockaddr_in  srv_addr;
@@ -22,7 +22,9 @@ void          init_server()
   struct protoent     *proto;
   s_client*           client_one;
   s_client*           client_two;
+  int                 on;
 
+  on = 1;
   if ((proto = getprotobyname("TCP")) == NULL)
     exit(EXIT_FAILURE);
   if ((listener = socket(AF_INET, SOCK_STREAM, proto->p_proto)) == -1)
@@ -33,6 +35,8 @@ void          init_server()
   srv_addr.sin_family = AF_INET;
   srv_addr.sin_addr.s_addr = INADDR_ANY;
   srv_addr.sin_port = htons(PORT);
+  //OPT TO RE-USE THE SAME PORT
+  setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
   if ((bind(listener, (const struct sockaddr*)&srv_addr, sizeof(srv_addr))) == -1)
   {
     //TODO Get Error_handler
@@ -49,6 +53,7 @@ void          init_server()
   client_chain_handler_init("client_one");
   client_one = list_chain->first;
   client_two = add_client("client_two");
+  //TODO Handle each entrance connexion on loop + THREAD
   client_one->fd = accept(listener, (struct sockaddr *)&cli_addr, &socklen);
   client_two->fd = accept(listener, (struct sockaddr *)&cli_addr, &socklen);
   if (client_one->fd == -1 || client_two->fd == -1)
@@ -58,7 +63,7 @@ void          init_server()
   my_printf("Connexion ok\n");
   write(client_one->fd, my_strconcat("Hej!", client_one->name), my_strlen(my_strconcat("Hej!", client_one->name)));
   write(client_two->fd, my_strconcat("Hej!", client_two->name), my_strlen(my_strconcat("Hej!", client_two->name)));
-
+  return (listener);
 }
 
 void          client_chain_handler_init(char* client_name)

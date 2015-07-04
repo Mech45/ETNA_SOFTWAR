@@ -2,6 +2,7 @@
 #include "./headers/main.h"
 #include "./headers/init_server.h"
 #include <sys/select.h>
+#include <sys/time.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
@@ -12,21 +13,33 @@ int main()
 {
 
   char*               buffer;
+  int                 socket;
+  int                 result;
   int                 nread;
+  struct              timeval tv;
   fd_set              readfs;
   s_client*           client_one;
   s_client*           client_two;
 
-  init_server();
+
+  socket = init_server();
   client_one = list_chain->first;
   client_two = client_one->next;
   while (42)
   {
+    /*SET TIMEOUT AFTER 2.5 SECONDS*/
+    tv.tv_sec = 2;
+    tv.tv_usec = 500000;
     FD_ZERO(&readfs);
     FD_SET(client_one->fd, &readfs);
     FD_SET(client_two->fd, &readfs);
     FD_SET(0, &readfs);
-    select(6, &readfs, NULL, NULL, NULL);
+    result = select(6, &readfs, NULL, NULL, &tv);
+    if (result == 0)
+    {
+      my_printf("TIMEOUT!\n");
+      result = 1;
+    }
     if (FD_ISSET(client_one->fd, &readfs))
     {
       my_printf("Client_One\n");
@@ -51,8 +64,9 @@ int main()
     {
       close(client_one->fd);
       close(client_two->fd);
+      close(socket);
       //TODO FREE LISTCHAIN
-      return (EXIT_SUCCESS);
+      exit(EXIT_SUCCESS);
     }
   }
   return (0);
