@@ -34,6 +34,7 @@
   char *my_strstr(char *str, char *to_find);
   char *my_readline(int alloc);
   char* my_strcpy(char* str_source);
+  int	my_getnbr(char *str);
 
   void convertHex (int input, int maj);
   void nibblesIT(int tabEmptyBin[], int recupHexa[]);

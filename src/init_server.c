@@ -49,7 +49,7 @@ int          init_server()
   //Function Handle acceptance + create chain per client
   handler_acceptance_chaining(listener);
   my_printf("Connexion ok\n");
-  return (listener);
+  return(listener);
 }
 
 void          client_chain_handler_init(char* client_name)
@@ -77,4 +77,22 @@ s_client*     add_client(char* client_name)
   client->next = NULL;
   client_buffer->next = client;
   return (client);
+}
+
+void add_clients_list(s_client** clients)
+{
+    list_chain->clients_list = clients;
+}
+
+void deleteAllChain()
+{
+  s_client* entity;
+
+  while (list_chain->first != NULL)
+    {
+      entity = list_chain->first;
+      list_chain->first = entity->next;
+      free(entity);
+    }
+  free(list_chain);
 }
