@@ -14,12 +14,13 @@
 #include <errno.h>
 
 
-int          init_server()
+void          init_server()
 {
   int                 listener;
   struct sockaddr_in  srv_addr;
   struct protoent     *proto;
   int                 on;
+  s_server*           server_info_create;
 
   on = 1;
   if ((proto = getprotobyname("TCP")) == NULL)
@@ -49,7 +50,9 @@ int          init_server()
   //Function Handle acceptance + create chain per client
   handler_acceptance_chaining(listener);
   my_printf("Connexion ok\n");
-  return(listener);
+  server_info_create = malloc(sizeof(s_server));
+  server_info_create->listener = listener;
+  list_chain->server_info = server_info_create;
 }
 
 void          client_chain_handler_init(char* client_name)

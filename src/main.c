@@ -12,14 +12,9 @@
 
 int main()
 {
-  int                 socket;
   s_client**          clients_list_all;
-  s_server*           server_info_create;
 
-  socket = init_server();
-  server_info_create = malloc(sizeof(s_server));
-  server_info_create->listener = socket;
-  list_chain->server_info = server_info_create;
+  init_server();
   clients_list_all = list_chain->clients_list;
   //PARSE SELECT + THREAD
   handle_select(clients_list_all);

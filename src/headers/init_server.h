@@ -37,7 +37,7 @@ s_listChain*   list_chain;
 // PROTOTYPES
 ///////////////////////////////////////////////////////
 
-int           init_server();
+void           init_server();
 void          client_chain_handler_init(char* client_name);
 s_client*     add_client(char* client_name);
 void          add_clients_list(s_client** clients);
