@@ -5,16 +5,11 @@
 ** Login   <lecler_s@etna-alternance.net>
 **
 ** Started on  Wed Apr 23 11:39:49 2014 Steven Leclerc
-** Last update Wed Mar 18 09:52:25 2015 COSSON Clement
+** Last update Sun Mar 22 16:08:46 2015 COSSON Clement
 */
 
 #ifndef MY_HEADER_H
 #define MY_HEADER_H
-
-  ///////////////////////////////////////////////////////
-  // INCLUDES
-  ///////////////////////////////////////////////////////
-  #include <stddef.h>
 
   ///////////////////////////////////////////////////////
   // PROTOTYPES
@@ -25,7 +20,7 @@
   void my_putchar(int c);
   void my_putstr(char *str);
   int my_strchar(char to_find, char* string);
-  size_t my_strlen(const char *);
+  int my_strlen(char *str);
   int my_strcmp(char *s1, char *s2);
   int my_strpos(char *, char *);
   char *my_strconcat(char *first_string, char *second_string);
@@ -34,7 +29,7 @@
   char *my_strstr(char *str, char *to_find);
   char *my_readline(int alloc);
   char* my_strcpy(char* str_source);
-
+  int my_getnbr(char *str);
   void convertHex (int input, int maj);
   void nibblesIT(int tabEmptyBin[], int recupHexa[]);
   void readHexa(int recupHexa[]);

@@ -5,7 +5,7 @@
 ** Login   <cosson_c@etna-alternance.net>
 **
 ** Started on  Fri Mar 13 19:58:08 2015 COSSON Clement
-** Last update Tue Mar 17 17:44:21 2015 COSSON Clement
+** Last update Sun Mar 22 15:28:02 2015 COSSON Clement
 */
 #ifndef __LIST_H__
 #define __LIST_H__
@@ -66,4 +66,5 @@ int			nb_elem_list_char(t_list_char *ptr);
 **	copie la liste chainé dans un tableau précédemment alloué
 */
 void			cp_list_to_table(t_list_char *ptr, char *table);
+
 #endif

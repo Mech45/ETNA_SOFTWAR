@@ -5,108 +5,106 @@
 ** Login   <cosson_c@etna-alternance.net>
 **
 ** Started on  Wed Mar 18 01:11:19 2015 COSSON Clement
-** Last update Wed Mar 18 09:46:23 2015 COSSON Clement
+** Last update Sun Mar 22 17:37:15 2015 COSSON Clement
 */
 #include <stdio.h>
 #include <stdlib.h>
 #include "./headers/my_softwar.h"
 #include "./headers/list.h"
-#include "./headers/my.h"
+#include "../lib/my/src/headers/my.h"
 
-void    print_usage()
+void	print_usage()
 {
-  my_putstr("USAGE : ./server [-v] --ip [server ip] --size [map size]");
-  my_putstr("--log [absolut path log file] --cycle [nb cycle] --port [port]\n");
-  my_putstr("Exemple : ./server -v --ip 36.178.153.129 --size 8");
-  my_putstr("--log /tmp/soft_war.log --cycle 1000000 --port 4242\n");
+  my_putstr("USAGE : "BIN_NAME" ["VERBOSE_NAME"] ["SIZE_NAME" map_size]");
+  my_putstr(" "LOG_NAME" absolut_path_log_file ["CYCLE_NAME" nb_cycle] ");
+  my_putstr(""PORT_NAME" port_number\n");
+  my_putstr("Exemple : "BIN_NAME" "VERBOSE_NAME" "SIZE_NAME" 8");
+  my_putstr(" "LOG_NAME" /tmp/soft_war.log "CYCLE_NAME" 1000000 ");
+  my_putstr("--port 4242\n");
 }
 
-int     check_if_params_are_corrects(int ac, char **av, t_args *s_as)
+void	init_args(t_args *s_as)
 {
-  if (ac != 5)
-    return (0);
-  if (my_strcmp(av[1], "--ip") == 0 && my_strcmp(av[3], "--port") == 0)
+  s_as->v = 0;
+  s_as->size = 0;
+  s_as->log = NULL;
+  s_as->cycle = 0;
+  s_as->port = 0;
+}
+
+int	check_if_params_are_corrects(int ac, char **av, t_args *s_as)
+{
+  int	i;
+
+  i = 0;
+  if (!(ac >= ARGC_MIN && ac <= ARGC_MAX))
+    return (print_error_arg(ac));
+  for (i = 0; i < ac; i++)
     {
-      if (((s_as->port = (unsigned short) check_if_port_is_correct(av[4])) != 0)
-          && check_if_ip_is_correct(check_if_look_ip(av[2], s_as), av[2], 0, 0))
-        {
-          my_strcpy(s_as->ip, av[2]);
-          return (1);
-        }
+      if (i == 0 && (my_strcmp(av[i], BIN_NAME) != 0))
+	return (print_error_bin(av[i]));
+      else if (i > 0 && my_strcmp(av[i], VERBOSE_NAME) != 0 &&
+		my_strcmp(av[i], SIZE_NAME) != 0 &&
+		my_strcmp(av[i], LOG_NAME) != 0 &&
+		my_strcmp(av[i], CYCLE_NAME) != 0 &&
+		my_strcmp(av[i], PORT_NAME) != 0)
+	return (print_error_argv(av[i]));
+      else if (my_strcmp(av[i], VERBOSE_NAME) == 0)
+	s_as->v = 1;
+      else if (i > 0)
+	{
+	  if (!check_if_params_are_corrects_bis(av[i], av[i + 1], s_as))
+	    return (0);
+	  i++;
+	}
     }
-  else if (my_strcmp(av[1], "--port") == 0 && my_strcmp(av[3], "--ip") == 0)
-    if (((s_as->port = (unsigned short) check_if_port_is_correct(av[2])) != 0)
-        && check_if_ip_is_correct(check_if_look_ip(av[4], s_as), av[4], 0, 0))
-      {
-        my_strcpy(s_as->ip, av[4]);
-        return (1);
-      }
-  return (0);
+  return (put_defaut_param(s_as)) ? (1) : (0);
 }
 
-int     check_if_look_ip(char *str, t_args *s_as)
+int	check_if_params_are_corrects_bis(char *av_name, char *av_arg,
+					 t_args *s_as)
 {
-  int   i;
-  int   cmpt_dot;
-  int   cmpt_colon;
-
-  cmpt_dot = 0;
-  cmpt_colon = 0;
-  for (i = 0; i < my_strlen(str); i++)
+  if (my_strcmp(av_name, SIZE_NAME) == 0)
     {
-      if (str[i] == '.')
-	cmpt_dot++;
-      else if (str[i] == ':')
-	cmpt_colon++;
+      if (!check_if_size_is_correct(av_arg, s_as))
+	return (print_error_size(av_arg));
     }
-  if (cmpt_dot == 3 && cmpt_colon == 0)
-    s_as->v_ip = 4;
-  else if (cmpt_colon == 7 && cmpt_dot == 0)
-    s_as->v_ip = 6;
-  else
-    s_as->v_ip = 0;
-  return (s_as->v_ip);
-}
-
-int     check_if_ip_is_correct(int v_ip, char *str, int i, int index)
-{
-  if (v_ip == 4 || v_ip == 6)
-    for (; i < my_strlen(str); i++)
-      if ((index > 3 && v_ip == 4) || (index > 4))
-        return (0);
-      else
-        if (str[i] == ((v_ip == 4) ? '.' : ':'))
-          {
-            if (index == 0)
-              return (0);
-            else
-              index = 0;
-          }
-        else
-          {
-            index++;
-            if (v_ip == 4 && !(str[i] >= '\x30' && str[i] <= '\x39'))
-              return (0);
-            else if (v_ip == 6 && !((str[i] >= '\x30' && str[i] <= '\x39')
-				    || (str[i] >= '\x41' && str[i] <= '\x46')
-				    || (str[i] >= '\x61' && str[i] <= '\x66')))
-              return (0);
-          }
-  else
-    return (0);
+  else if (my_strcmp(av_name, LOG_NAME) == 0)
+    {
+      if (!check_if_log_is_correct(av_arg, s_as))
+	return (print_error_log(av_arg));
+    }
+  else if (my_strcmp(av_name, CYCLE_NAME) == 0)
+    {
+      if (!check_if_cycle_is_correct(av_arg, s_as))
+	return (print_error_cycle(av_arg));
+    }
+  else if (my_strcmp(av_name, PORT_NAME) == 0)
+    {
+      if (!check_if_port_is_correct(av_arg, s_as))
+	return (print_error_port(av_arg));
+    }
   return (1);
 }
 
-int     check_if_port_is_correct(char *port)
+int	put_defaut_param(t_args *s_as)
 {
-  int   nbr;
-
-  if (my_str_isnum(port))
+  if (s_as->size == 0)
+    s_as->size = SIZE_MAP_DEFAUT;
+  if (s_as->cycle == 0)
+    s_as->cycle = CYCLE_DEFAUT;
+  if (s_as->log == NULL)
     {
-      nbr = my_getnbr(port);
-      if (nbr >= PORT_MIN && nbr <= PORT_MAX)
-        return (nbr);
+      my_printf("Vous devez renseigner l'argument "LOG_NAME"\n");
+      my_printf("voir l'USAGE ci dessous");
+      return (0);
     }
-  return (0);
+  if (s_as->port == 0)
+    {
+      my_printf("Vous devez renseigner l'argument "PORT_NAME"\n");
+      my_printf("voir l'USAGE ci dessous");
+      return (0);
+    }
+  return (1);
 }
 
