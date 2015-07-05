@@ -5,7 +5,7 @@
 ** Login   <cosson_c@etna-alternance.net>
 **
 ** Started on  Wed Mar 18 04:37:42 2015 COSSON Clement
-** Last update Sun Mar 22 16:18:53 2015 COSSON Clement
+** Last update Sun Mar 22 22:53:00 2015 COSSON Clement
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -74,5 +74,11 @@ int	check_if_log_is_correct(char *log_file, t_args *s_as)
     return (0);
   else
     return (1);
+}
+
+int	return_memory_error(int	error_code)
+{
+  my_printf("Erreur mémoire, la programme a du s'arreter\n");
+  return (error_code);
 }
 

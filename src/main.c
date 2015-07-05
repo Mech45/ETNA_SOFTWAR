@@ -5,7 +5,7 @@
 ** Login   <cosson_c@etna-alternance.net>
 **
 ** Started on  Tue Mar 17 17:26:56 2015 COSSON Clement
-** Last update Sun Mar 22 17:38:41 2015 COSSON Clement
+** Last update Sun Mar 22 23:58:09 2015 COSSON Clement
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,25 +13,38 @@
 #include "../lib/my/src/headers/my.h"
 #include "./headers/my_softwar.h"
 
-int	main(int argc, char *argv[])
+int		main(int argc, char *argv[])
 {
   t_args	*s_args;
+  t_map		*s_map;
 
+  s_map = NULL;
+  s_args = NULL;
   if ((s_args = malloc(sizeof(*s_args))) == NULL)
-    return (0);
+    return (return_memory_error(0));
   init_args(s_args);
   if (check_if_params_are_corrects(argc, argv, s_args))
     {
-      printf("Au boulot \n");
-      printf("s_args->v == %d\n", s_args->v);
-      printf("s_args->size == %d\n", s_args->size);
-      printf("s_args->log == %s\n", s_args->log);
-      printf("s_args->fd_log == %d\n", s_args->fd_log);
-      printf("s_args->cycle == %d\n", s_args->cycle);
-      printf("s_args->port == %d\n", s_args->port);
+      if ((s_map = init_map(s_map, s_args)) == NULL)
+	return (0);
+      display_map(s_map, s_args);
     }
   else
     print_usage();
+  return (free_it_before_end(s_args, s_map));
+}
+
+int	free_it_before_end(t_args *s_args, t_map *s_map)
+{
+  free(s_args->log);
   free(s_args);
+  free(s_map);
   return (0);
 }
+
+void	*return_memory_error_ptr()
+{
+  my_printf("Erreur mémoire, la programme a du s'arreter\n");
+  return (NULL);
+}
+

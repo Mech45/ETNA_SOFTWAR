@@ -5,7 +5,7 @@
 ** Login   <cosson_c@etna-alternance.net>
 **
 ** Started on  Wed Mar 18 01:01:05 2015 COSSON Clement
-** Last update Sun Mar 22 17:07:01 2015 COSSON Clement
+** Last update Mon Mar 23 00:24:43 2015 COSSON Clement
 */
 #ifndef __SOFTWAR_H__
 #define __SOFTWAR_H__
@@ -31,10 +31,16 @@
 #define LOG_NAME "--log"
 #define CYCLE_NAME "--cycle"
 #define PORT_NAME "--port"
+#define CLIENT_ALIVE 0
+#define CLIENT_DEAD 1
+#define CLIENT_SLEEP_1 2
+#define CLIENT_SLEEP_2 3
+
 /*
 **	-v (active le mode verbeux)
 **	--size [nombre entier correspondant à la taille de la map]
 **	--log [adresse absolue du log]
+**	--fd_log [file director du fichier de log]
 **	--cycle [nombre entier de microsecondes correspondant à un cycle]
 **	--port [port du serveur]
 */
@@ -47,7 +53,49 @@ typedef			struct
   int			cycle;
   unsigned short	port;
 }			t_args;
+/*
+**	--> empty  : 0 pas d'énergie sur la case, 1 energie sur la case
+**	--> energy : 0 pas de client, 1 || 2 || 3 || 4 client sur la map
+**	--> num_client : 0 pas de client, 1 || 2 || 3 || 4 client sur la map;
+*/
+typedef			struct
+{
+  int			empty;
+  int			energy;
+  int			num_client;
+}			t_map;
+/*
+**	--> signature	: signature numérique du client
+**	--> i		: coordonnées i dans la matrice
+**	--> j		: coordonnées j dans la matrice ()
+**	--> pivot	: lié a un énumération pour le sens du client FBLR
+**	--> status	: OK, 1_TOUR (d'attente), 2_TOUR, MORT
+*/
+typedef			struct
+{
+  char			signature;
+  int			i;
+  int			j;
+  enum position		pivot;
+  int			status;
+}			t_client;
 
+enum position {left, forward, right, back};
+
+/*
+**	===================================================================
+**	=============================== main.c ============================
+**	===================================================================
+*/
+/*
+**	free les pointeurs
+*/
+int     free_it_before_end(t_args *s_args, t_map *s_map);
+/*
+**	**	retourne NULL
+**	affiche un message pour dire qu'il y a eu une erreur mémoire
+*/
+void    *return_memory_error_ptr();
 /*
 **	===================================================================
 **	======================== main_functions_1.c =======================
@@ -148,4 +196,22 @@ int     print_error_cycle(char* str);
 **	affiche l'erreur au niveau de l'arg log
 */
 int     print_error_port(char* str);
+/*
+**	retourne le parametre passé en argument
+**	affiche un message pour dire qu'il y a eu une erreur mémoire
+*/
+int     return_memory_error(int error_code);
+/*
+**	===================================================================
+**	========================== map_functions_1.c ======================
+**	===================================================================
+*/
+/*
+**	Fait l'allocation dynamique de la map
+*/
+t_map	*init_map(t_map *s_map, t_args *s_as);
+/*
+**	affiche la matrice
+*/
+void    display_map(t_map *s_map, t_args *s_as);
 #endif
