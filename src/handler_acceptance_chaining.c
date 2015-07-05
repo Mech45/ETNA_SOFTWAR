@@ -84,6 +84,7 @@ void* thread_acceptance(void* data_array)
     cli_addr = s_data->cli_addr;
     socklen = s_data->socklen;
     client_buff = s_data->client;
+    pthread_mutex_init(&(client_buff->mutex), NULL);
     client_buff->fd = accept(listener, (struct sockaddr *)cli_addr, &socklen);
     my_printf("Host->name : %s\n", s_data->client->name);
     write(client_buff->fd, my_strconcat("Hej!", client_buff->name), my_strlen(my_strconcat("Hej!", client_buff->name)));

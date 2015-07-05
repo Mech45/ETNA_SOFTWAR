@@ -7,12 +7,19 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <pthread.h>
+
+pthread_mutex_t  mutex_read_and_actions_client1 = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t  mutex_read_and_actions_client2 = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t  mutex_read_and_actions_client3 = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t  mutex_read_and_actions_client4 = PTHREAD_MUTEX_INITIALIZER;
 
 int handle_select(s_client** clients_list_all)
   {
     int                 result;
     struct timeval      tv;
     int                 i;
+    pthread_t           threads[4];
     fd_set              readfs;
     fd_set              writefs;
 
@@ -41,8 +48,9 @@ int handle_select(s_client** clients_list_all)
       if (FD_ISSET(clients_list_all[0]->fd, &readfs))
       {
         //Read Command from client
+        pthread_mutex_lock(&(clients_list_all[0]->mutex));
         my_printf("HANDLE SELECT READ OK\n");
-        handle_read_command(clients_list_all[0]);
+        pthread_create(&(threads[0]), NULL,(void*)handle_read_command, (void *)clients_list_all[0]);
         FD_CLR(clients_list_all[0]->fd, &readfs);
       }
       if (FD_ISSET(clients_list_all[0]->fd, &writefs))

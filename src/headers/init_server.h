@@ -5,6 +5,7 @@
 #define BACKLOG 5
 #define EXIT_FAILURE 0
 #define EXIT_SUCCESS 1
+#include <pthread.h>
 
 ///////////////////////////////////////////////////////
 // STRUCTURES
@@ -18,6 +19,7 @@ typedef struct            s_client
 {
   char*             name;
   int               fd;
+  pthread_mutex_t   mutex;
   struct s_client*  next;
 }                   s_client;
 

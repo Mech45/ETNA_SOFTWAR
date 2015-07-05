@@ -15,12 +15,10 @@ typedef struct structFunction
 ///////////////////////////////////////////////////////
 // PROTOTYPES
 ///////////////////////////////////////////////////////
-void handle_read_command(s_client* client);
+void* handle_read_command(s_client* client);
 void function_forward();
 void function_backward(s_client* client);
 void function_left(s_client* client);
 void function_right(s_client* client);
-
-
 
 #endif
