@@ -40,6 +40,7 @@ void* handle_read_command(s_client* client)
   }
   if (function_founded == 0)
   {
+    write(client->fd, "ko\n", my_strlen("ko\n"));
     pthread_mutex_unlock(&(client->mutex));
   }
   free(buffer_read);

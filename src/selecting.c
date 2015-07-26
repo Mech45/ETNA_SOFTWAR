@@ -55,30 +55,43 @@ int handle_select(s_client** clients_list_all)
       }
       if (FD_ISSET(clients_list_all[0]->fd, &writefs))
       {
+        // my_printf("HOST 1 Writing detected\n");
         FD_CLR(clients_list_all[0]->fd, &writefs);
       }
       if (FD_ISSET(clients_list_all[1]->fd, &readfs))
       {
+        pthread_mutex_lock(&(clients_list_all[1]->mutex));
+        my_printf("HANDLE SELECT READ OK\n");
+        pthread_create(&(threads[1]), NULL,(void*)handle_read_command, (void *)clients_list_all[1]);
         FD_CLR(clients_list_all[1]->fd, &readfs);
       }
       if (FD_ISSET(clients_list_all[1]->fd, &writefs))
       {
+        // my_printf("HOST 2 Writing detected\n");
         FD_CLR(clients_list_all[1]->fd, &writefs);
       }
       if (FD_ISSET(clients_list_all[2]->fd, &readfs))
       {
+        pthread_mutex_lock(&(clients_list_all[2]->mutex));
+        my_printf("HANDLE SELECT READ OK\n");
+        pthread_create(&(threads[2]), NULL,(void*)handle_read_command, (void *)clients_list_all[2]);
         FD_CLR(clients_list_all[2]->fd, &readfs);
       }
       if (FD_ISSET(clients_list_all[2]->fd, &writefs))
       {
+        // my_printf("HOST 3 Writing detected\n");
         FD_CLR(clients_list_all[2]->fd, &writefs);
       }
       if (FD_ISSET(clients_list_all[3]->fd, &readfs))
       {
+        pthread_mutex_lock(&(clients_list_all[3]->mutex));
+        my_printf("HANDLE SELECT READ OK\n");
+        pthread_create(&(threads[3]), NULL,(void*)handle_read_command, (void *)clients_list_all[3]);
         FD_CLR(clients_list_all[3]->fd, &readfs);
       }
       if (FD_ISSET(clients_list_all[3]->fd, &writefs))
       {
+        // my_printf("HOST 4 Writing detected\n");
         FD_CLR(clients_list_all[3]->fd, &writefs);
       }
       if (FD_ISSET(0, &readfs))
