@@ -40,7 +40,7 @@ void          init_server()
     //TODO Get Error_handler
     exit(EXIT_FAILURE);
   }
-  if ((listen(listener, BACKLOG)) == -1)
+  if ((listen(listener, BACKLOG - 1)) == -1)
   {
     //TODO Get Error_handler
     my_printf("Connexion ko\n");
@@ -53,49 +53,4 @@ void          init_server()
   server_info_create = malloc(sizeof(s_server));
   server_info_create->listener = listener;
   list_chain->server_info = server_info_create;
-}
-
-void          client_chain_handler_init(char* client_name)
-{
-  s_client*     client;
-
-  list_chain = malloc(sizeof(s_listChain));
-  client = malloc(sizeof(s_client));
-  if ((list_chain == NULL) || (client == NULL))
-  {
-    exit(-1);
-  }
-  client->name = client_name;
-  list_chain->first = client;
-}
-
-s_client*     add_client(char* client_name)
-{
-  s_client*     client;
-  s_client*     client_buffer;
-
-  client_buffer = list_chain->first;
-  client = malloc(sizeof(s_client));
-  client->name = client_name;
-  client->next = NULL;
-  client_buffer->next = client;
-  return (client);
-}
-
-void add_clients_list(s_client** clients)
-{
-    list_chain->clients_list = clients;
-}
-
-void deleteAllChain()
-{
-  s_client* entity;
-
-  while (list_chain->first != NULL)
-    {
-      entity = list_chain->first;
-      list_chain->first = entity->next;
-      free(entity);
-    }
-  free(list_chain);
 }

@@ -1,6 +1,6 @@
 #include "../lib/my/src/headers/my.h"
 #include "./headers/selecting.h"
-#include "./headers/init_server.h"
+#include "./headers/chain_handlers.h"
 #include "./headers/handle_read_command.h"
 #include <sys/select.h>
 #include <sys/time.h>
@@ -22,13 +22,12 @@ t_listFunc structList[] =
 void* handle_read_command(s_client* client)
 {
   char*         buffer_read;
-  int           nread;
   int           i;
   int           function_founded;
 
   buffer_read = malloc(sizeof(char) * 20);
-  nread = read(client->fd, buffer_read, 20);
-  buffer_read[nread - 2] = '\0';
+  read(client->fd, buffer_read, 20);
+  //TODO Handle Error_handler
   my_printf("received : #%s#\n", buffer_read);
   for (i = 0, function_founded = 0; structList[i].action != 0; i++)
   {

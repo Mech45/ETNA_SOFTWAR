@@ -19,5 +19,6 @@ int main()
   //PARSE SELECT + THREAD
   handle_select(clients_list_all);
   free(clients_list_all);
+  //TODO KILL TIME THREAD
   return (0);
 }

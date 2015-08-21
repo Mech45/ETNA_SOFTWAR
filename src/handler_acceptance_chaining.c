@@ -1,7 +1,9 @@
 #include "../lib/my/src/headers/my.h"
 #include "./headers/main.h"
+#include "./headers/chain_handlers.h"
 #include "./headers/init_server.h"
 #include "./headers/handler_acceptance_chaining.h"
+#include "./headers/threads.h"
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -13,10 +15,8 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <pthread.h>
-#include <errno.h>
 #include <stdio.h>
 
-pthread_mutex_t  mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void handler_acceptance_chaining(int listener)
   {
@@ -24,11 +24,12 @@ void handler_acceptance_chaining(int listener)
     socklen_t           socklen;
     s_client**          clients;
     pthread_t           threads[4];
-//    void*               status;
     s_acceptance_data*  s_data;
     int                 i;
     char*               array_name[4] = {"1","2","3","4"};
-    int                 ret;
+    int                 return_error;
+    pthread_mutex_t     mutex = PTHREAD_MUTEX_INITIALIZER;
+
 
     socklen = sizeof(cli_addr);
     cli_addr = malloc(sizeof(struct sockaddr_in*));
@@ -36,8 +37,9 @@ void handler_acceptance_chaining(int listener)
     clients = malloc(4 * sizeof(s_client));
     s_data->listener = listener;
     s_data->cli_addr = cli_addr;
+    s_data->mutex = &mutex;
     s_data->socklen = socklen;
-    for(i = 0; i < BACKLOG - 1; i++)
+    for(i = 0; i < BACKLOG; i++)
     {
       pthread_mutex_lock(&mutex);
       if (i != 0)
@@ -51,44 +53,12 @@ void handler_acceptance_chaining(int listener)
       }
       //create threads
       s_data->client = clients[i];
-      pthread_create(&(threads[i]), NULL, thread_acceptance, (void *)s_data);
-    }
-    for (i = 0, ret = 0; i < 4; i++)
-    {
-      if (pthread_join(threads[i], NULL) != 0)
+      return_error = pthread_create(&(threads[i]), NULL, thread_acceptance, (void *)s_data);
+      if (return_error != 0)
       {
-        ret = -1;
+        perror("pthread_create");
       }
     }
-    if (ret != -1)
-    {
+    if (pthread_mutex_trylock(&mutex) != 0)
       add_clients_list(clients);
-      free(s_data);
-    }
-    else
-    {
-      perror("pthread_create");
-    }
-  }
-
-void* thread_acceptance(void* data_array)
-  {
-    s_client*           client_buff;
-    s_acceptance_data*  s_data;
-    int                 listener;
-    struct sockaddr_in* cli_addr;
-    socklen_t           socklen;
-
-    s_data = data_array;
-    listener = s_data->listener;
-    cli_addr = s_data->cli_addr;
-    socklen = s_data->socklen;
-    client_buff = s_data->client;
-    pthread_mutex_init(&(client_buff->mutex), NULL);
-    client_buff->fd = accept(listener, (struct sockaddr *)cli_addr, &socklen);
-    my_printf("Host->name : %s\n", s_data->client->name);
-    write(client_buff->fd, my_strconcat("Hej!", client_buff->name), my_strlen(my_strconcat("Hej!", client_buff->name)));
-    write(client_buff->fd, "\n", my_strlen("\n"));
-    pthread_mutex_unlock(&mutex);
-    pthread_exit(NULL);
   }

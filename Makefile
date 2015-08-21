@@ -10,7 +10,7 @@ LIBMY=libmy.so
 
 # Commands
 CC=gcc -lpthread
-CFLAGS=-W -Wall -Werror -Wextra -std=c11 -g
+CFLAGS=-W -Wall -Werror -Wextra -std=c11 -std=gnu99 -g
 DEBUGGER=gdb
 RM=rm -rf
 

@@ -1,14 +1,14 @@
-#ifndef SOFTWAR_SELECTING_H
-#define SOFTWAR_SELECTING_H
+#ifndef SOFTWAR_THREAD_H
+#define SOFTWAR_THREAD_H
 
 #define EXIT_FAILURE 0
 #define EXIT_SUCCESS 1
-
-#include "./chain_handlers.h"
 ///////////////////////////////////////////////////////
 // PROTOTYPES
 ///////////////////////////////////////////////////////
-int handle_select(s_client** clients_list_all);
+
+void* thread_acceptance(void* data_array);
+void* thread_handle_cycle();
 
 
 #endif
