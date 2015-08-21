@@ -25,3 +25,15 @@ octal.o
 my_strcpy.o
 lib/my/obj/octal.o
 bin/soft-war-server
+lib/my/obj/my_strpos.o
+lib/my/obj/my_strncpy.o
+lib/my/obj/my_getnbr.o
+lib/my/obj/my_strlen.o
+lib/my/obj/my_strconcat.o
+lib/my/obj/unsignedU.o
+lib/my/obj/my_readline.o
+lib/my/obj/my_strcpy.o
+lib/my/bin/libmy.so
+lib/my/obj/my_convertHexa.o
+lib/my/obj/my_printf.o
+lib/my/obj/binaire.o
