@@ -45,6 +45,18 @@ void add_clients_list(s_client** clients)
     list_chain->clients_list = clients;
 }
 
+void regen_client_actions()
+{
+  s_client* entity;
+
+  entity = list_chain->first;
+  while(entity != NULL)
+  {
+    entity->action_available = 1;
+    entity = entity->next;
+  }
+}
+
 void deleteAllChain()
 {
   s_client* entity;

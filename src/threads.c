@@ -15,6 +15,7 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <time.h>
+#include <signal.h>
 
 void* thread_acceptance(void* data_array)
   {
@@ -31,6 +32,7 @@ void* thread_acceptance(void* data_array)
     cli_addr = s_data->cli_addr;
     socklen = s_data->socklen;
     client_buff = s_data->client;
+    client_buff->action_available = 1;
     pthread_mutex_init(&(client_buff->mutex), NULL);
     client_buff->fd = accept(listener, (struct sockaddr *)cli_addr, &socklen);
     my_printf("Host->name : %s\n", s_data->client->name);
@@ -46,7 +48,16 @@ void* thread_handle_cycle()
     {
       my_printf("thread_time : OK\n");
       usleep(CYCLE_TIME);
-      // regen_client_actions();
+      regen_client_actions();
       // action_map_energy_point();
     }
   }
+void killThread(pthread_t* threads)
+{
+  int i;
+
+  for(i = 0; i <= 4; i++)
+  {
+    pthread_kill(threads[i], 20);
+  }
+}

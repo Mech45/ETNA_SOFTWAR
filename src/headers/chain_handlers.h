@@ -30,6 +30,7 @@ s_listChain*   list_chain;
 void   client_chain_handler_init(char* client_name);
 s_client*   add_client(char* client_name);
 void   add_clients_list(s_client** clients);
+void regen_client_actions();
 void   deleteAllChain();
 
 

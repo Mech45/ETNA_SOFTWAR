@@ -9,6 +9,7 @@
 
 void* thread_acceptance(void* data_array);
 void* thread_handle_cycle();
+void killThread(pthread_t* threads);
 
 
 #endif

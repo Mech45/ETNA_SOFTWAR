@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <pthread.h>
+#include <signal.h>
 
 pthread_mutex_t  mutex_read_and_actions_client1 = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t  mutex_read_and_actions_client2 = PTHREAD_MUTEX_INITIALIZER;
@@ -114,6 +115,8 @@ int handle_select(s_client** clients_list_all)
           close(clients_list_all[i]->fd);
         close(list_chain->server_info->listener);
         deleteAllChain();
+        pthread_kill(thread_time, 20);
+        killThread(threads_client);
         exit(EXIT_SUCCESS);
       }
     }
