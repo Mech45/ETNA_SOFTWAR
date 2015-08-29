@@ -1,6 +1,6 @@
 language: c
 os:
   - linux
-install: make get-deps
+install: make re
 # uncomment this line if your project needs to run something other than `rake`:
-script: make re
+script: scons
