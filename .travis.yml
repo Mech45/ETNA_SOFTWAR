@@ -3,4 +3,4 @@ os:
   - linux
 install: make re
 # uncomment this line if your project needs to run something other than `rake`:
-script: scons
+#script: scons
